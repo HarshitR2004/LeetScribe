@@ -5,11 +5,9 @@ A Chrome extension that allows you to save LeetCode problem notes directly to yo
 ## Features
 
 - 🎯 **Smart Detection**: Automatically detects when you're on a LeetCode problem page
-- 🚀 **One-Click Save**: Floating save button for quick access
-- 📝 **Auto-Fill**: Automatically extracts question name and topics from the page
 - 💾 **Local Backup**: Saves entries locally as backup in case Notion fails
 - 🔄 **Real-time Sync**: Instantly syncs your notes to Notion
-- 🎨 **Beautiful UI**: Clean, modern interface that doesn't interfere with LeetCode
+- 🎨 **Compatiable UI**: Clean, modern interface that doesn't interfere with LeetCode
 
 ## Installation
 
