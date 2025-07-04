@@ -5,7 +5,6 @@ A Chrome extension that allows you to save LeetCode problem notes directly to yo
 ## Features
 
 - 🎯 **Smart Detection**: Automatically detects when you're on a LeetCode problem page
-- 💾 **Local Backup**: Saves entries locally as backup in case Notion fails
 - 🔄 **Real-time Sync**: Instantly syncs your notes to Notion
 - 🎨 **Compatiable UI**: Clean, modern interface that doesn't interfere with LeetCode
 
@@ -110,7 +109,6 @@ LeetScribe/
 1. **Content Script** (`content.js`): Runs on LeetCode problem pages, adds the save button and modal
 2. **Background Script** (`background.js`): Handles secure API calls to Notion
 3. **Popup** (`popup.html/js`): Provides interface for configuration and viewing saved entries
-4. **Local Storage**: Keeps backup copies of all saved entries
 
 
 ## Privacy & Security
@@ -118,7 +116,6 @@ LeetScribe/
 - Your Notion token is stored securely in Chrome's sync storage
 - All data is encrypted in transit to Notion's servers
 - No data is sent to any third-party servers other than Notion
-- Local backups are stored only on your device
 
 
 **Happy coding!** 🚀 If you find this extension helpful, consider starring the repository and sharing it with fellow developers.
