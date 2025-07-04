@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "LeetScribe",
+  "version": "1.0",
+  "description": "Save LeetCode problem notes and solutions to Notion database",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "https://api.notion.com/*"
+  ],
+  "host_permissions": [
+    "https://leetcode.com/*",
+    "https://api.notion.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://leetcode.com/problems/*"],
+      "js": ["content.js"],
+      "css": ["styles.css"]
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "LeetScribe"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["modal.html", "modal.js"],
+      "matches": ["https://leetcode.com/*"]
+    }
+  ]
+}

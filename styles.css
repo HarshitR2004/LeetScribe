@@ -1,0 +1,273 @@
+/* Floating Save Button Styles */
+#leetcode-notion-save-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    background: linear-gradient(135deg, #FFA116 0%, #FF8C00 100%);
+    color: #1A1A1A;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    cursor: pointer;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(255, 161, 22, 0.3);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    user-select: none;
+    border: 1px solid #FFB84D;
+}
+
+#leetcode-notion-save-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 161, 22, 0.4);
+    background: linear-gradient(135deg, #FFB84D 0%, #FFA116 100%);
+    border-color: #FFC966;
+}
+
+#leetcode-notion-save-btn:active {
+    transform: translateY(0);
+}
+
+/* Modal Styles */
+#leetcode-notion-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 20000;
+    display: none;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.modal-content {
+    background: #1A1A1A;
+    border: 1px solid #333333;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px 0 24px;
+    border-bottom: 1px solid #333333;
+    margin-bottom: 20px;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #FFA116;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #CCCCCC;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+    background: #333333;
+    color: #FFA116;
+}
+
+/* Form Styles */
+#notion-save-form {
+    padding: 0 24px 24px 24px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #EEEEEE;
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #444444;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    box-sizing: border-box;
+    background: #2A2A2A;
+    color: #EEEEEE;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #FFA116;
+    box-shadow: 0 0 0 3px rgba(255, 161, 22, 0.2);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #888888;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #333333;
+}
+
+.btn-cancel,
+.btn-save {
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    min-width: 80px;
+}
+
+.btn-cancel {
+    background: #333333;
+    color: #EEEEEE;
+    border: 1px solid #444444;
+}
+
+.btn-cancel:hover {
+    background: #444444;
+    border-color: #555555;
+}
+
+.btn-save {
+    background: linear-gradient(135deg, #FFA116 0%, #FF8C00 100%);
+    color: #1A1A1A;
+    border: 1px solid #FFB84D;
+}
+
+.btn-save:hover:not(:disabled) {
+    background: linear-gradient(135deg, #FFB84D 0%, #FFA116 100%);
+    transform: translateY(-1px);
+    border-color: #FFC966;
+}
+
+.btn-save:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Status Messages */
+.save-status {
+    margin-top: 16px;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.save-status.success {
+    background: #1A4D1A;
+    color: #4AFF4A;
+    border: 1px solid #2D662D;
+}
+
+.save-status.error {
+    background: #4D1A1A;
+    color: #FF4A4A;
+    border: 1px solid #662D2D;
+}
+
+.save-status.hidden {
+    display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+    .modal-overlay {
+        padding: 10px;
+    }
+    
+    .modal-content {
+        max-height: 95vh;
+    }
+    
+    .modal-header,
+    #notion-save-form {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .btn-cancel,
+    .btn-save {
+        width: 100%;
+    }
+    
+    #leetcode-notion-save-btn {
+        right: 10px;
+        top: 10px;
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+}

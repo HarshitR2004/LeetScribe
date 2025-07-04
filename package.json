@@ -1,0 +1,21 @@
+{
+  "name": "leetscribe",
+  "version": "1.0.0",
+  "description": "Chrome extension to save LeetCode problem notes to Notion",
+  "main": "background.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "validate": "node validate-setup.js"
+  },
+  "keywords": [
+    "chrome-extension",
+    "leetcode",
+    "notion",
+    "productivity",
+    "note-taking"
+  ],
+  "author": "GitHub Copilot",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {}
+}

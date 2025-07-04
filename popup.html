@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeetScribe - Settings</title>
+    <style>
+        body {
+            width: 400px;
+            min-height: 500px;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1A1A1A 0%, #2A2A2A 100%);
+            color: #EEEEEE;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+            font-weight: 600;
+            color: #FFA116;
+        }
+
+        .header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #444444;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #2A2A2A;
+            color: #EEEEEE;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            background: #333333;
+            border-color: #FFA116;
+            box-shadow: 0 0 0 3px rgba(255, 161, 22, 0.2);
+        }
+
+        .form-group input::placeholder {
+            color: #888888;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #FFA116 0%, #FF8C00 100%);
+            color: #1A1A1A;
+            border: 2px solid #FFB84D;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #FFB84D 0%, #FFA116 100%);
+            border-color: #FFC966;
+        }
+
+        .btn-secondary {
+            background: #333333;
+            color: #EEEEEE;
+            border: 1px solid #444444;
+        }
+
+        .btn-secondary:hover {
+            background: #444444;
+            border-color: #555555;
+        }
+
+        .status {
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 15px;
+            font-size: 13px;
+            text-align: center;
+            display: none;
+        }
+
+        .status.success {
+            background: #1A4D1A;
+            border: 1px solid #2D662D;
+            color: #4AFF4A;
+        }
+
+        .status.error {
+            background: #4D1A1A;
+            border: 1px solid #662D2D;
+            color: #FF4A4A;
+        }
+
+        .help-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #444444;
+        }
+
+        .help-section h3 {
+            margin: 0 0 15px 0;
+            font-size: 16px;
+            font-weight: 500;
+            color: #FFA116;
+        }
+
+        .help-section ol {
+            margin: 0;
+            padding-left: 20px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .help-section li {
+            margin-bottom: 8px;
+        }
+
+        .help-section a {
+            color: #FFA116;
+            text-decoration: underline;
+        }
+
+        .saved-entries {
+            margin-top: 20px;
+        }
+
+        .saved-entries h3 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+            font-weight: 500;
+            color: #FFA116;
+        }
+
+        .entry-count {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>LeetScribe</h1>
+            <p>Configure your Notion integration</p>
+        </div>
+
+        <form id="config-form">
+            <div class="form-group">
+                <label for="notion-token">Notion Integration Token:</label>
+                <input 
+                    type="password" 
+                    id="notion-token" 
+                    placeholder="secret_xxxxxxxxxxxx"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="database-id">Database ID:</label>
+                <input 
+                    type="text" 
+                    id="database-id" 
+                    placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save Configuration</button>
+            <button type="button" id="test-connection" class="btn btn-secondary">Test Connection</button>
+        </form>
+
+        <div id="status" class="status"></div>
+
+        <div class="saved-entries">
+            <h3>Local Backup</h3>
+            <div class="entry-count" id="entry-count">Loading...</div>
+            <button type="button" id="view-backups" class="btn btn-secondary">View Saved Entries</button>
+        </div>
+
+        <div class="help-section">
+            <h3>Setup Instructions:</h3>
+            <ol>
+                <li>Go to <a href="https://www.notion.so/my-integrations" target="_blank" rel="noopener">Notion Integrations</a></li>
+                <li>Click "New integration" and create one</li>
+                <li>Copy the "Internal Integration Token"</li>
+                <li>Create a database in Notion with these properties:
+                    <ul>
+                        <li>Question Name (Title)</li>
+                        <li>Topics (Text)</li>
+                        <li>URL (URL)</li>
+                        <li>Date Added (Date)</li>
+                    </ul>
+                </li>
+                <li>Share the database with your integration</li>
+                <li>Copy the database ID from the URL</li>
+            </ol>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
