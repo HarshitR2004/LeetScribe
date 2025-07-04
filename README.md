@@ -34,7 +34,7 @@ A Chrome extension that allows you to save LeetCode problem notes directly to yo
 3. Give it a name (e.g., "LeetScribe")
 4. Select your workspace
 5. Click "Submit"
-6. **Copy the "Internal Integration Token"** - you'll need this later
+6. **Copy the "Internal Integration Secret"** - you'll need this later
 
 ### Step 2: Create a Database
 
@@ -55,17 +55,15 @@ Create a new database in Notion with these **exact** property names:
 
 ### Step 3: Share Database with Integration
 
-1. Open your database page
+1. Open your Database page
 2. Click "Share" in the top right
-3. Click "Invite" and search for your integration name
-4. Give it "Edit" permissions
-5. **Copy the Database ID** from the URL (the long string of characters)
+3. Click "Copy link" to get the database share URL
 
 ### Step 4: Configure Extension
 
 1. Click the extension icon in your Chrome toolbar
 2. Paste your Integration Token
-3. Paste your Database ID
+3. Paste your Database Share URL (the extension will automatically extract the Database ID)
 4. Click "Save Configuration"
 5. Click "Test Connection" to verify everything works
 
@@ -76,11 +74,25 @@ Create a new database in Notion with these **exact** property names:
 2. **Click the "Save to Notion" button** that appears in the top-right corner
 
 3. **Fill in the form:**
-   - **Question Name**: Auto-filled from the page title
+   - **Question Name**: Enter the problem name manually (e.g., "Two Sum", "Valid Parentheses")
    - **Topics**: Auto-filled if available, or add manually (e.g., "Array, Hash Table")
    - **Intuition/Trick**: Your solution approach, key insights, or tricks
 
 4. **Click "Save to Notion"** and you're done! ✅
+
+## Data Storage Structure
+
+### Database Properties (Table Columns)
+- **Question Name**: Stored as the page title
+- **Topics**: Stored as text in the Topics column  
+- **URL**: Direct link to the LeetCode problem
+- **Date Added**: Automatically set to today's date
+
+### Page Content (Inside Each Notion Page)
+- **Intuition/Trick**: Saved as formatted content blocks inside each page
+  - Creates a "Intuition/Trick" heading
+  - Followed by your notes in paragraph format
+  - This allows for rich formatting and unlimited text length
 
 ## File Structure
 
@@ -102,78 +114,6 @@ LeetScribe/
 3. **Popup** (`popup.html/js`): Provides interface for configuration and viewing saved entries
 4. **Local Storage**: Keeps backup copies of all saved entries
 
-## API Integration Example
-
-The extension uses the Notion API to create new pages in your database. Here's the core API call structure:
-
-```javascript
-const response = await fetch('https://api.notion.com/v1/pages', {
-    method: 'POST',
-    headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-        'Notion-Version': '2022-06-28'
-    },
-    body: JSON.stringify({
-        parent: { database_id: databaseId },
-        properties: {
-            "Question Name": {
-                title: [{ text: { content: questionName } }]
-            },
-            "Topics": {
-                rich_text: [{ text: { content: topics } }]
-            },
-            "URL": { url: problemUrl },
-            "Date Added": {
-                date: { start: new Date().toISOString().split('T')[0] }
-            }
-        },
-        children: [
-            {
-                object: "block",
-                type: "paragraph",
-                paragraph: {
-                    rich_text: [{ text: { content: intuition } }]
-                }
-            }
-        ]
-    })
-});
-```
-
-## Troubleshooting
-
-### Common Issues
-
-1. **"Notion configuration not found" error**
-   - Make sure you've entered both the Integration Token and Database ID
-   - Click "Test Connection" to verify your setup
-
-2. **"Failed to save to Notion" error**
-   - Check that your integration has access to the database
-   - Verify the database has the correct property names (case-sensitive)
-   - Ensure your integration token is valid
-
-3. **Save button not appearing**
-   - Make sure you're on a LeetCode problem page (URL contains `/problems/`)
-   - Try refreshing the page
-   - Check that the extension is enabled
-
-4. **Database properties don't match**
-   - Property names must be exactly: "Question Name", "Topics", "URL", "Date Added"
-   - Property types must match the specification above
-
-### Debug Tools
-
-Open the extension popup and use these console commands in the developer tools:
-
-```javascript
-// Clear all local storage
-clearLocalStorage()
-
-// Export all saved data
-exportData()
-```
 
 ## Privacy & Security
 
@@ -181,21 +121,6 @@ exportData()
 - All data is encrypted in transit to Notion's servers
 - No data is sent to any third-party servers other than Notion
 - Local backups are stored only on your device
-
-## Contributing
-
-Feel free to submit issues and enhancement requests! Some ideas for future improvements:
-
-- [ ] Edit saved entries
-- [ ] Bulk export/import
-- [ ] Multiple database support
-- [ ] Custom field mapping
-- [ ] Solution code saving
-- [ ] Difficulty and company tags extraction
-
-## License
-
-This project is open source and available under the [MIT License](LICENSE).
 
 ---
 

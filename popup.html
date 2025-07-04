@@ -124,51 +124,6 @@
             border: 1px solid #662D2D;
             color: #FF4A4A;
         }
-
-        .help-section {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #444444;
-        }
-
-        .help-section h3 {
-            margin: 0 0 15px 0;
-            font-size: 16px;
-            font-weight: 500;
-            color: #FFA116;
-        }
-
-        .help-section ol {
-            margin: 0;
-            padding-left: 20px;
-            font-size: 13px;
-            line-height: 1.5;
-        }
-
-        .help-section li {
-            margin-bottom: 8px;
-        }
-
-        .help-section a {
-            color: #FFA116;
-            text-decoration: underline;
-        }
-
-        .saved-entries {
-            margin-top: 20px;
-        }
-
-        .saved-entries h3 {
-            margin: 0 0 10px 0;
-            font-size: 16px;
-            font-weight: 500;
-            color: #FFA116;
-        }
-
-        .entry-count {
-            font-size: 13px;
-            opacity: 0.8;
-        }
     </style>
 </head>
 <body>
@@ -204,31 +159,6 @@
         </form>
 
         <div id="status" class="status"></div>
-
-        <div class="saved-entries">
-            <h3>Local Backup</h3>
-            <div class="entry-count" id="entry-count">Loading...</div>
-            <button type="button" id="view-backups" class="btn btn-secondary">View Saved Entries</button>
-        </div>
-
-        <div class="help-section">
-            <h3>Setup Instructions:</h3>
-            <ol>
-                <li>Go to <a href="https://www.notion.so/my-integrations" target="_blank" rel="noopener">Notion Integrations</a></li>
-                <li>Click "New integration" and create one</li>
-                <li>Copy the "Internal Integration Token"</li>
-                <li>Create a database in Notion with these properties:
-                    <ul>
-                        <li>Question Name (Title)</li>
-                        <li>Topics (Text)</li>
-                        <li>URL (URL)</li>
-                        <li>Date Added (Date)</li>
-                    </ul>
-                </li>
-                <li>Share the database with your integration</li>
-                <li>Copy the database ID from the URL</li>
-            </ol>
-        </div>
     </div>
 
     <script src="popup.js"></script>

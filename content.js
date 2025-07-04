@@ -10,29 +10,6 @@
     let saveButton = null;
     let modal = null;
 
-    // Function to extract question name from the page
-    function getQuestionName() {
-        // Try multiple selectors for question title
-        const selectors = [
-            '[data-cy="question-title"]',
-            'h1',
-            '.css-v3d350',
-            '.question-title'
-        ];
-        
-        for (const selector of selectors) {
-            const element = document.querySelector(selector);
-            if (element && element.textContent.trim()) {
-                return element.textContent.trim();
-            }
-        }
-        
-        // Fallback to URL parsing
-        const urlParts = window.location.pathname.split('/');
-        const problemSlug = urlParts[urlParts.length - 1] || urlParts[urlParts.length - 2];
-        return problemSlug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-    }
-
     // Function to extract topics/tags from the page
     function getTopics() {
         const topics = [];
@@ -133,20 +110,19 @@
     function showModal() {
         if (!modal) createModal();
         
-        // Pre-fill the form
-        const questionName = getQuestionName();
+        // Pre-fill only the topics, let user enter question name manually
         const topics = getTopics();
         
-        modal.querySelector('#question-name').value = questionName;
+        modal.querySelector('#question-name').value = '';
         modal.querySelector('#topics').value = topics;
         modal.querySelector('#intuition').value = '';
         
         modal.style.display = 'block';
         document.body.style.overflow = 'hidden';
         
-        // Focus on the intuition field
+        // Focus on the question name field first
         setTimeout(() => {
-            modal.querySelector('#intuition').focus();
+            modal.querySelector('#question-name').focus();
         }, 100);
     }
 

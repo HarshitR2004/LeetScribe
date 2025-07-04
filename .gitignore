@@ -8,6 +8,12 @@ secrets.json
 .env.test
 .env.production
 
+# Development and Testing Files
+notion-api-examples.js
+test-*.js
+examples/
+testing/
+
 # Chrome Extension Development
 # Packed extension files
 *.crx

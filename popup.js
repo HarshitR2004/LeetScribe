@@ -1,18 +1,45 @@
 document.addEventListener('DOMContentLoaded', function() {
     const configForm = document.getElementById('config-form');
     const testConnectionBtn = document.getElementById('test-connection');
-    const viewBackupsBtn = document.getElementById('view-backups');
     const statusDiv = document.getElementById('status');
-    const entryCountDiv = document.getElementById('entry-count');
+
+    // Utility function to extract database ID from Notion database link
+    function extractDatabaseIdFromLink(notionLink) {
+        try {
+            // Handle different types of Notion database links
+            
+            // Remove the protocol and domain
+            let path = notionLink.replace(/^https?:\/\/[^\/]+\//, '');
+            
+            // Extract the database ID (32 character hex string before ?v= or other parameters)
+            const databaseIdMatch = path.match(/([a-f0-9]{32})/i);
+            
+            if (databaseIdMatch) {
+                const rawId = databaseIdMatch[1];
+                // Format as UUID with dashes: 8-4-4-4-12
+                const formattedId = `${rawId.slice(0,8)}-${rawId.slice(8,12)}-${rawId.slice(12,16)}-${rawId.slice(16,20)}-${rawId.slice(20,32)}`;
+                return formattedId;
+            }
+            
+            // If it's already a formatted UUID, return as is
+            const uuidMatch = notionLink.match(/([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})/i);
+            if (uuidMatch) {
+                return uuidMatch[1];
+            }
+            
+            throw new Error('Could not extract database ID from the provided link');
+        } catch (error) {
+            console.error('Error extracting database ID:', error.message);
+            return null;
+        }
+    }
 
     // Load saved configuration
     loadConfiguration();
-    loadEntryCount();
 
     // Event listeners
     configForm.addEventListener('submit', handleSaveConfiguration);
     testConnectionBtn.addEventListener('click', handleTestConnection);
-    viewBackupsBtn.addEventListener('click', handleViewBackups);
 
     async function loadConfiguration() {
         try {
@@ -30,25 +57,28 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    async function loadEntryCount() {
-        try {
-            const result = await chrome.storage.local.get(null);
-            const leetcodeEntries = Object.keys(result).filter(key => key.startsWith('leetcode_'));
-            entryCountDiv.textContent = `${leetcodeEntries.length} entries saved locally`;
-        } catch (error) {
-            entryCountDiv.textContent = 'Error loading entry count';
-        }
-    }
-
     async function handleSaveConfiguration(e) {
         e.preventDefault();
         
         const token = document.getElementById('notion-token').value.trim();
-        const databaseId = document.getElementById('database-id').value.trim();
+        const databaseInput = document.getElementById('database-id').value.trim();
 
-        if (!token || !databaseId) {
+        if (!token || !databaseInput) {
             showStatus('Please fill in both fields', 'error');
             return;
+        }
+
+        // Extract database ID from URL if it's a share link
+        let databaseId;
+        if (databaseInput.startsWith('http')) {
+            databaseId = extractDatabaseIdFromLink(databaseInput);
+            if (!databaseId) {
+                showStatus('Invalid Notion database URL. Please check the format.', 'error');
+                return;
+            }
+            showStatus(`Extracted Database ID: ${databaseId}`, 'success');
+        } else {
+            databaseId = databaseInput;
         }
 
         try {
@@ -65,11 +95,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function handleTestConnection() {
         const token = document.getElementById('notion-token').value.trim();
-        const databaseId = document.getElementById('database-id').value.trim();
+        const databaseInput = document.getElementById('database-id').value.trim();
 
-        if (!token || !databaseId) {
+        if (!token || !databaseInput) {
             showStatus('Please fill in both fields first', 'error');
             return;
+        }
+
+        // Extract database ID from URL if it's a share link
+        let databaseId;
+        if (databaseInput.startsWith('http')) {
+            databaseId = extractDatabaseIdFromLink(databaseInput);
+            if (!databaseId) {
+                showStatus('Invalid Notion database URL. Please check the format.', 'error');
+                return;
+            }
+        } else {
+            databaseId = databaseInput;
         }
 
         // Save configuration first
@@ -105,41 +147,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    async function handleViewBackups() {
-        try {
-            const result = await chrome.storage.local.get(null);
-            const leetcodeEntries = Object.entries(result)
-                .filter(([key]) => key.startsWith('leetcode_'))
-                .map(([key, value]) => ({ key, ...value }))
-                .sort((a, b) => new Date(b.savedAt) - new Date(a.savedAt));
-
-            if (leetcodeEntries.length === 0) {
-                showStatus('No saved entries found', 'error');
-                return;
-            }
-
-            // Create a simple display of entries
-            let entriesText = 'Saved Entries:\n\n';
-            leetcodeEntries.forEach((entry, index) => {
-                entriesText += `${index + 1}. ${entry.questionName}\n`;
-                entriesText += `   Topics: ${entry.topics || 'None'}\n`;
-                entriesText += `   URL: ${entry.url}\n`;
-                entriesText += `   Saved: ${new Date(entry.savedAt).toLocaleDateString()}\n`;
-                entriesText += `   Synced: ${entry.synced ? 'Yes' : 'No'}\n\n`;
-            });
-
-            // Open in new tab or show in alert
-            const blob = new Blob([entriesText], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            
-            // Try to open in new tab
-            chrome.tabs.create({ url: url });
-            
-        } catch (error) {
-            showStatus('Error loading backups: ' + error.message, 'error');
-        }
-    }
-
     function showStatus(message, type) {
         statusDiv.textContent = message;
         statusDiv.className = `status ${type}`;
@@ -150,39 +157,4 @@ document.addEventListener('DOMContentLoaded', function() {
             statusDiv.style.display = 'none';
         }, 5000);
     }
-
-    // Function to clear all local storage (for debugging)
-    window.clearLocalStorage = async function() {
-        if (confirm('Are you sure you want to clear all local storage? This cannot be undone.')) {
-            await chrome.storage.local.clear();
-            loadEntryCount();
-            showStatus('Local storage cleared', 'success');
-        }
-    };
-
-    // Function to export all data
-    window.exportData = async function() {
-        try {
-            const result = await chrome.storage.local.get(null);
-            const leetcodeEntries = Object.entries(result)
-                .filter(([key]) => key.startsWith('leetcode_'))
-                .map(([key, value]) => ({ key, ...value }));
-
-            const dataStr = JSON.stringify(leetcodeEntries, null, 2);
-            const blob = new Blob([dataStr], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `leetcode-notes-${new Date().toISOString().split('T')[0]}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-
-            showStatus('Data exported successfully!', 'success');
-        } catch (error) {
-            showStatus('Error exporting data: ' + error.message, 'error');
-        }
-    };
 });
