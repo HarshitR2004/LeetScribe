@@ -120,6 +120,5 @@ LeetScribe/
 - No data is sent to any third-party servers other than Notion
 - Local backups are stored only on your device
 
----
 
 **Happy coding!** 🚀 If you find this extension helpful, consider starring the repository and sharing it with fellow developers.
